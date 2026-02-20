@@ -1,0 +1,37 @@
+import os
+from launch import LaunchDescription
+from launch.actions import ExecuteProcess # used to start processes
+
+def generate_launch_description():
+    
+    # paths used in executions
+    home = os.path.expanduser('~')
+    ardupilot_path = os.path.join(home, 'WAUV', 'ardupilot')
+    gz_world = os.path.join(home, 'WAUV', 'WAUVSim', 'src', 'bluerov2_gz', 'worlds', 'bluerov2_heavy_underwater.world')
+    qgc_path = os.path.join(home, 'WAUV', 'QGroundControl-x86_64.AppImage')
+
+    return LaunchDescription([
+        # start ArduSub SITL
+        ExecuteProcess(
+             cmd=['bash', '-c',
+                 f'source {home}/.profile && cd {ardupilot_path} && '
+                 './Tools/autotest/sim_vehicle.py -v ArduSub -L Madison --map --console '
+                 '-f vectored_6dof --model JSON --out=udp:127.0.0.1:14551'],
+            output='screen'
+        ),
+
+        # start Gazebo
+        ExecuteProcess(
+            cmd=['gz', 'sim', '-v', '3', '-r', gz_world],
+            output='screen'
+        ),
+
+        ExecuteProcess(
+            cmd=['bash', '-c',
+                 'source /opt/ros/humble/setup.bash && ros2 launch mavros mavros.launch.py fcu_url:=udp://:14551@'],
+            output='screen'
+        ),
+
+        # can optionally add QGC for simulation telemetry / GUI
+    ])
+
