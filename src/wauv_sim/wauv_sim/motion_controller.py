@@ -40,7 +40,7 @@ class motion_controller(Node):
         )
 
         # control loop timer
-        self.timer = self.create_timer(0.05, self.control_loop)  # 20 Hz
+        self.timer = self.create_timer(0.05, self.command_loop)  # 20 Hz
 
         # state variables
         self.current_pose = None

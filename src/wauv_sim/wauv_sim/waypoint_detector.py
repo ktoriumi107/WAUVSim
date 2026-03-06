@@ -11,10 +11,10 @@ from geometry_msgs.msg import Point
 from geometry_msgs.msg import PoseStamped
 import math
 
-class waypoint_controller(Node):
+class waypoint_detector(Node):
 
     def __init__(self):
-        super().__init__('waypoint_controller')
+        super().__init__('waypoint_detector')
 
         # publisher for waypoints
         self.wp_pub = self.create_publisher(
@@ -30,7 +30,7 @@ class waypoint_controller(Node):
         self.timer = self.create_timer(0.5, self.update_waypoint)
 
         # baseline path (circle)
-        self.radius = 5.0
+        self.radius = 20.0
         self.center_x = 0.0
         self.center_y = 0.0
         self.depth = -2.0
@@ -38,7 +38,7 @@ class waypoint_controller(Node):
         self.angle = 0.0
         self.angular_speed = 0.1
 
-        self.get_logger().info("Waypoint controller started")
+        self.get_logger().info("Waypoint detector started")
 
     def update_waypoint(self):
         # circular trajectory
@@ -64,7 +64,7 @@ class waypoint_controller(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    node = WaypointController()
+    node = waypoint_detector()
 
     rclpy.spin(node)
 
