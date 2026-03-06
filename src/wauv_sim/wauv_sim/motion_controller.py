@@ -1,4 +1,9 @@
-'''Command the correct velocity, heading, and depth for the AUV.'''
+"""
+Filename: motion_controller.py
+Author: Keiji Toriumi
+Date: 05/03/2026
+Description: ROS2 node to command velocity using MAVROS based on target waypoint and current position
+"""
 
 import rclpy
 from rclpy.node import Node
@@ -22,7 +27,7 @@ class motion_controller(Node):
 
         self.waypoint_sub = self.create_subscription(
             Point,
-            '/wauv/waypoint',
+            '/wauv_sim/waypoint',
             self.waypoint_callback,
             10
         )
